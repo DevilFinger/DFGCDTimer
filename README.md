@@ -35,7 +35,11 @@ DFGCDTimer *gcdTimer = [DFGCDTimer scheduledTimerWithQueue:nil timeInterval:1 de
 [self.gcdTimer start];
 ```
 
-## If you want to manage multiple Timers, you can use DFGCDTimerManager to manage them. This is a singleton manager. Use Key to manage Timer, such as create, cancel, pause, resume, etc. As the name is the unique key of the timer. Make sure to use unique names for timer instances.
+### DFGCDTimerManager
+* If you want to manage multiple Timers, you can use DFGCDTimerManager to manage them. 
+* This is a singleton manager. 
+* Use Key to manage Timer, such as create, cancel, pause, resume, etc. 
+* As the name is the unique key of the timer. Make sure to use unique names for timer instances.
 
 1. Create Timer by unique Key in singleton mode
 
