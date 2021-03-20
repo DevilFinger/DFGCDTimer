@@ -1,12 +1,10 @@
 # DFGCDTimer
-
-## About
 DFGCDTimer is implementation of NSTimer-like class with API close to original, but done on top of Apple's GCD (Grand Central Dispatch).
 
-### Requirements
+## Requirements
 This component requires iOS 8.0+.
 
-### Installation
+## Installation
 Copy the file to your project to use
 
 ## Usage
