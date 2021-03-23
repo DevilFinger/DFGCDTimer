@@ -5,85 +5,64 @@ DFGCDTimer is implementation of NSTimer-like class with API close to original, b
 This component requires iOS 8.0+.
 
 ## Installation
-Copy the file to your project to use
+Copy the file `DFTimer.h` and `DFTimer.m` to your project
 
 ## Usage
-1. How to create a Timer
 
+### Create No Repeat Timer
 ```
-__weak typeof(self) weakSelf = self;
-DFGCDTimer *gcdTimer = [DFGCDTimer scheduledTimerWithQueue:nil timeInterval:1 delay:0 isRepeats:YES hanlder:^{
-        [weakSelf doSomeThing];
+//create a timer which fires a single time after 2 seconds.
+self.timerEx = [DFTimer onceAfter:2 handler:^(DFTimer *timer) {
+        NSLog(@"do something");
+}];
+        
+//create a timer in specify queue which fires a single time after 1 seconds.
+self.timerEx = [DFTimer onceInQueue:dispatch_get_main_queue() after:1 handler:^(DFTimer *timer) {
+        NSLog(@"do something");
 }];
 ```
 
-2. suspend the timer
+### Create Repeat Timer
+```       
+// create a Repeat timer which fires every 1 seconds
+    self.timerEx = [DFTimer everyWithInterval:1 handler:^(DFTimer *timer) {
+        NSLog(@"everyWithInterval");
+    }];
+ 
+ //create a Repeat timer which fires every 1 seconds. 
+ //it will auto stop when fire 3 times
+   self.timerEx = [DFTimer everyWithInterval:1 repeatTimes:3 handler:^(DFTimer *timer) {
+        NSLog(@"everyWithInterval");
+    }];
 
-```
-[self.gcdTimer pause];
-```
+// create a Repeat timer in specify queue. it will begin after 2 second . 
+// and then fire every 1 seconds and repeat 3 times.
+    self.timerEx = [DFTimer everyInQueue:dispatch_get_main_queue() after:2 interval:1 repeatTimes:3 handler:^(DFTimer *timer) {
+        NSLog(@"everyWithInterval");
+        NSLog(@"thread %@", [NSThread currentThread]);
+    }];
+ 
+ ```
+ ### Others
+ 
+ ```
+ //Whether it is a background task, after it is turned on, even if the APP exits to the background, the task will continue to be executed
+ self.timerEx.isBackgroundMode = YES
+ 
+ //Timer status monitoring. You can monitor the current status of the timer. Such as execution, suspension, cancellation
+    self.timerEx.observer = ^(DFTimer *timer, DFTimerState state) {
+        NSLog(@"state %@", @(state));
+    };
 
-3. close or cancel the timer
+//Start or resume the timer
+[self.timerEx fire];
+        
+//Pause the timer
+[self.timerEx pause];
+        
+//Cancel timer
+[self.timerEx cancel];
 
-```
-[self.gcdTimer cancel];
-```
-
-4. start or resume the timer
-
-```
-[self.gcdTimer start];
-```
-
-### DFGCDTimerManager
-* If you want to manage multiple Timers, you can use DFGCDTimerManager to manage them. 
-* This is a singleton manager. 
-* Use Key to manage Timer, such as create, cancel, pause, resume, etc. 
-* As the name is the unique key of the timer. Make sure to use unique names for timer instances.
-
-1. Create Timer by unique Key in singleton mode
-
-```
- [[DFGCDTimerManager sharedManger] scheduledTimerWithKey:@"first" queue:nil timeInterval:1 delay:0 isRepeats:YES];
-```
-
-2. Pause Timer by unique Key in singleton mode
-
-```
-[[DFGCDTimerManager sharedManger] pauseTimerWithKey:@"first"];
-```
-
-3. Close or Cancel Timer by unique Key in singleton mode
-
-```
-[[DFGCDTimerManager sharedManger] cancelTimerWithKey:@"first"];
-```
-
-4. Start or Resume Timer by unique Key in singleton mode
-
-```
-[[DFGCDTimerManager sharedManger] startTimerWithKey:@"first"];
-```
-5. Receive function callbacks through Delegate
-
-```
-[DFGCDTimerManager sharedManger].delegate = self;
-
--(void)dfGCDTimerManagerDidFiredWithKey:(NSString *)key{
-    NSLog(@"dfGCDTimerManagerDidFiredWithKey %@", key);
-   
-}
-
--(void)dfGCDTimerManagerDidCancelWithKey:(NSString *)key{
-    NSLog(@"dfGCDTimerManagerDidCancelWithKey %@", key);
-}
-
--(void)dfGCDTimerManagerDidPauseWithKey:(NSString *)key{
-    NSLog(@"dfGCDTimerManagerDidPauseWithKey %@", key);
-}
-
-
-```
-
+ ```
 ### License
 DFGCDTimer is available under the MIT license. See the LICENSE file for more info.
